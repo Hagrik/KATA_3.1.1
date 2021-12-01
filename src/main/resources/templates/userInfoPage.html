@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UserTablePage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>User Management System</h1>
+    <hr>
+    <h2>User Info</h2>
+
+    <table border="1" class="table table-responsive-md table-striped">
+        <thead>
+        <tr>
+            <th>User First Name</th>
+            <th>User Last Name</th>
+            <th>User Age</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getLastname()}"></td>
+            <td th:text="${user.getAge()}"></td>
+            <td th:text="${user.getRoles()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <a th:href="@{/admin}" > Back to UserList</a>
+    </div>
+    <br>
+    <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+</div>
+</body>
+</html>

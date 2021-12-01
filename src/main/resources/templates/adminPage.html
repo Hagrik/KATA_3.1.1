@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UserTablePage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-2">
+    <h1>UserList</h1>
+
+    <a th:href="@{/admin/addUser}" class="btn btn-primary btn-sm mb-3"> Add User </a>
+
+    <table border="1" class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>User FirstName</th>
+            <th>User LastName</th>
+            <th>User Age</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td><a th:href="@{/admin/userInfoForm/{id}(id=${user.getId()})}" th:text="${user.getName()}"></a></td>
+            <td th:text="${user.getLastname()}"></td>
+            <td th:text="${user.getAge()}"></td>
+            <td th:text="${user.getRoles()}"></td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <form action="#" th:action="@{/admin/removeUser/{id}(id=${user.getId()})}" th:method="DELETE">
+                                <button type="submit" class="btn btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/editUserForm/{id}(id=${user.getId()})}" class="btn btn-primary">Update</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+</div>
+</body>
+</html>
