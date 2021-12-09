@@ -29,6 +29,9 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
+    @Column(name = "email")
+    private String email;
+
     private String password;
 
     private boolean active;

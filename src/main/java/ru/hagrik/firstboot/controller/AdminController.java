@@ -1,6 +1,7 @@
 package ru.hagrik.firstboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,19 +27,14 @@ public class AdminController {
         this.springSecurityConfig = springSecurityConfig;
     }
 
-    @GetMapping
-    public String userList(Model model) {
+    @GetMapping()
+    public String userList(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("newUser", new User());
+        model.addAttribute("user", user);
+        model.addAttribute("roleSet", roleService.findAllRoles());
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
         return "adminPage";
-    }
-
-    @GetMapping("/addUser")
-    public String addUserForm(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("roleSet", roleService.findAllRoles());
-        return "addUserPage";
     }
 
     @PostMapping("/addUser")
@@ -48,18 +44,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/removeUser/{id}")
-    public String removeUser(@PathVariable("id") Long id) {
+    @DeleteMapping("/removeUser")
+    public String removeUser(Long id) {
         userService.removeUserById(id);
         return "redirect:/admin";
-    }
-
-    @GetMapping("/editUserForm/{id}")
-    public String editUserForm(@PathVariable("id") Long id, Model model) {
-        User user = userService.findUserById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("roleSet", roleService.findAllRoles());
-        return "editUserPage";
     }
 
     @PatchMapping("/editUser")
@@ -69,10 +57,16 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/userInfoForm/{id}")
-    public String userInfoForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.findUserById(id));
+    @GetMapping("/userInfoForm")
+    public String userInfoForm(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
         return "userInfoPage";
     }
 
+    @GetMapping("/findOne")
+    @ResponseBody
+    public User findOne(Long id){
+       return userService.findUserById(id);
+    }
 }

@@ -1,25 +1,19 @@
 package ru.hagrik.firstboot.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hagrik.firstboot.model.Role;
 import ru.hagrik.firstboot.repository.RoleRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService{
 
     final RoleRepository roleRepository;
-    @PersistenceContext
-    final EntityManager entityManager;
 
-    public RoleServiceImpl(RoleRepository roleRepository, EntityManager entityManager) {
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -29,13 +23,11 @@ public class RoleServiceImpl implements RoleService{
 
     @Transactional
     public List<Role> findAllRoles() {
-        return entityManager.createQuery("FROM Role").getResultList();
+        return roleRepository.findAll();
     }
 
     @Transactional
-    public Role getRoleByRoleName(String roleName) {
-        return entityManager.createQuery(
-                        "FROM Role WHERE role=:role", Role.class)
-                .setParameter("role", roleName).getSingleResult();
+    public Role findRoleByRoleName(String roleName) {
+        return roleRepository.findRoleByRoleName(roleName);
     }
 }
