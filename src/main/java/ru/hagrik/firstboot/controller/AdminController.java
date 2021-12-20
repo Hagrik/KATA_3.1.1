@@ -18,13 +18,11 @@ public class AdminController {
 
     final UserService userService;
     final RoleService roleService;
-    final SpringSecurityConfig springSecurityConfig;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, SpringSecurityConfig springSecurityConfig) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.springSecurityConfig = springSecurityConfig;
     }
 
     @GetMapping()
@@ -37,26 +35,6 @@ public class AdminController {
         return "adminPage";
     }
 
-    @PostMapping("/addUser")
-    public String saveUser(User user) {
-        user.setPassword(springSecurityConfig.passwordEncoder().encode(user.getPassword()));
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/removeUser")
-    public String removeUser(Long id) {
-        userService.removeUserById(id);
-        return "redirect:/admin";
-    }
-
-    @PatchMapping("/editUser")
-    public String editUser(User user) {
-        user.setPassword(springSecurityConfig.passwordEncoder().encode(user.getPassword()));
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
-
     @GetMapping("/userInfoForm")
     public String userInfoForm(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
@@ -64,9 +42,4 @@ public class AdminController {
         return "userInfoPage";
     }
 
-    @GetMapping("/findOne")
-    @ResponseBody
-    public User findOne(Long id){
-       return userService.findUserById(id);
-    }
 }
