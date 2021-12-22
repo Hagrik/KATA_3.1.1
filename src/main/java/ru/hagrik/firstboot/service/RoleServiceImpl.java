@@ -26,8 +26,4 @@ public class RoleServiceImpl implements RoleService{
         return roleRepository.findAll();
     }
 
-    @Transactional
-    public Role findRoleByRoleName(String roleName) {
-        return roleRepository.findRoleByRoleName(roleName);
-    }
 }
