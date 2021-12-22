@@ -50,22 +50,7 @@ public class AdminRestController {
     @PostMapping(value = "/saveUser")
     @ResponseBody
     public ResponseEntity<User> saveUser(@RequestBody String user) {
-        try {
-            User userToSave = objectMapper.readValue(user, User.class);
-            List<Role> allRoles = roleService.findAllRoles();
-            Set<Role> roleSet = new HashSet<>();
-            for (Role role : allRoles) {
-                if (user.contains(role.toString())) {
-                    roleSet.add(role);
-                }
-            }
-            userToSave.setRoles(roleSet);
-            userToSave.setPassword(springSecurityConfig.passwordEncoder().encode(userToSave.getPassword()));
-            userService.saveUser(userToSave);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return getUserResponseEntity(user);
     }
 
     @DeleteMapping("/{id}")
@@ -83,6 +68,10 @@ public class AdminRestController {
     @PatchMapping("/{id}")
     @ResponseBody
     public ResponseEntity<User> edit(@PathVariable("id") User userFromDb, @RequestBody String user) {
+        return getUserResponseEntity(user);
+    }
+
+    private ResponseEntity<User> getUserResponseEntity(@RequestBody String user) throws JsonProcessingException {
         try {
             User userToEdit = objectMapper.readValue(user, User.class);
             List<Role> allRoles = roleService.findAllRoles();
